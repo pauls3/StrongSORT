@@ -113,6 +113,12 @@ class opts:
             '--MC_lambda',
             default=0.98
         )
+        self.parser.add_argument(
+            'source',
+            type=str,
+            default="",
+            help='Expecting directory of video(s)',
+        )
 
     def parse(self, args=''):
         if args == '':
@@ -138,11 +144,18 @@ class opts:
             path_ECC = '/data/dyh/results/StrongSORT_Git/{}_ECC_{}.json'.format(opt.dataset, opt.mode)
             opt.ecc = json.load(open(path_ECC))
         opt.sequences = data[opt.dataset][opt.mode]
-        opt.dir_dataset = join(
-            opt.root_dataset,
-            opt.dataset,
-            'train' if opt.mode == 'val' else 'test'
-        )
+        if opt.source == '-':
+            opt.dir_dataset = join(
+                opt.root_dataset,
+                opt.dataset,
+                'train' if opt.mode == 'val' else 'test'
+            )
+        else:
+            opt.dir_dataset = join(
+                opt.source,
+                '-',
+                'test'
+            )
         return opt
 
 opt = opts().parse()
